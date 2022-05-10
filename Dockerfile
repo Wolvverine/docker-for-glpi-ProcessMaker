@@ -94,12 +94,12 @@ COPY processmaker.conf /etc/nginx/conf.d/default.conf
 RUN mkdir -p /var/tmp/nginx /var/log/nginx \
 	&& chown -R nginx:nginx /var/log/nginx /var/lib/nginx \
 	&& mkdir -p /var/log/php-fpm \
-	&& chown -R nginx:nginx /var/log/php-fpm \
+	&& chown -R nginx:nginx /var/log/php-fpm
 
 # TODO writable files - to volume - !! data and code
 RUN chown -R nginx:nginx /opt/processmaker-server/bootstrap/cache \
 /opt/processmaker-server/workflow/engine/config/ \
-/opt/processmaker-server/workflow/engine/content/languages/\
+/opt/processmaker-server/workflow/engine/content/languages/ \
 /opt/processmaker-server/workflow/engine/plugins/ \
 /opt/processmaker-server/workflow/engine/xmlform/ \
 /opt/processmaker-server/workflow/engine/js/labels/ \
