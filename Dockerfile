@@ -14,7 +14,7 @@ LABEL maintainer="Wolvverine <wolvverinepld [at] gmail [dot] com>"
 # Initial steps
 RUN set -ex ;\
 	rm -rf /var/cache/apk/* /tmp/* /var/tmp/* ;\
-	apk update ;\
+	apk update --no-cache;\
 	apk add --no-cache \
 	bash \
 	tzdata \
@@ -30,6 +30,7 @@ RUN set -ex ;\
 	libmcrypt \
 	libxpm \
 	supervisor \
+	mysql-client \
 	;\
 	apk add --no-cache --virtual .build-deps \
 	$PHPIZE_DEPS \
@@ -94,7 +95,9 @@ COPY processmaker.conf /etc/nginx/conf.d/default.conf
 RUN mkdir -p /var/tmp/nginx /var/log/nginx \
 	&& chown -R nginx:nginx /var/log/nginx /var/lib/nginx \
 	&& mkdir -p /var/log/php-fpm \
-	&& chown -R nginx:nginx /var/log/php-fpm
+	&& chown -R nginx:nginx /var/log/php-fpm \
+	&& mkdir -p /opt/processmaker-server/Backup \
+	&& chown -R nginx:nginx /opt/processmaker-server/Backup
 
 # TODO writable files - to volume - !! data and code
 RUN chown -R nginx:nginx /opt/processmaker-server/bootstrap/cache \
@@ -111,6 +114,7 @@ RUN chown -R nginx:nginx /opt/processmaker-server/bootstrap/cache \
 EXPOSE 8090
 
 WORKDIR "/opt/processmaker-server/workflow/engine"
+VOLUME "/opt/processmaker-server/Backup"
 
 # Docker entrypoint
 COPY supervisord.conf /etc/supervisord.conf
