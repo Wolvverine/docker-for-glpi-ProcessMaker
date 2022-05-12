@@ -22,4 +22,6 @@ set -ex
 # Start services
 #sed -i "s/'default' => env('QUEUE_CONNECTION', 'database'),/'default' => env('QUEUE_CONNECTION', 'sync'),/" /opt/processmaker/processmaker-server/config/queue.php
 
+echo "set mouse-=a" >> ~/.vimrc
+
 exec "$@"

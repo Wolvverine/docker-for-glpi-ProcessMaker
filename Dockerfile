@@ -52,6 +52,7 @@ RUN set -ex ;\
 	libxpm-dev \
 	libwebp-dev \
 	zlib-dev \
+	icu-dev \
 	;\
 	docker-php-source extract ; \
 	docker-php-ext-configure gd --with-freetype-dir=/usr/ --with-png-dir=/usr/ --with-jpeg-dir=/usr/ --with-xpm-dir=/usr/; \
@@ -64,6 +65,7 @@ RUN set -ex ;\
 	docker-php-ext-install mysqli ;\
 	docker-php-ext-install mcrypt ;\
 	docker-php-ext-install curl \
+		intl \
 	;\
 	docker-php-source delete \
 	; \
