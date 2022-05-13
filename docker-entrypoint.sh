@@ -17,7 +17,7 @@ set -ex
 #sed -i '/;opcache.fast_shutdown=0/c\opcache.fast_shutdown=1' /etc/php.d/10-opcache.ini
 
 # Set NGINX server_name
-#sed -i 's,server_name ~^.*$;,server_name '"${URL}"';,g' /etc/nginx/conf.d/processmaker.conf
+sed -i 's,server_name ~^.*$;,server_name '"${PM_HOST_FULL_NAME}"';,g' /etc/nginx/conf.d/default.conf
 
 # Start services
 #sed -i "s/'default' => env('QUEUE_CONNECTION', 'database'),/'default' => env('QUEUE_CONNECTION', 'sync'),/" /opt/processmaker/processmaker-server/config/queue.php
