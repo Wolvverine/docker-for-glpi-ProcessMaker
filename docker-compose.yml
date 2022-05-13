@@ -1,28 +1,62 @@
-version: "2.1"
+version: "3.1"
+
+volumes:
+  mariadb-pm-glpi-data:
+  processmaker-glpi-backup:
+  glpi-files:
+  glpi-config:
 
 services:
-   mysql:
-     image: mysql:5.6
+   mariadb:
+     image: mariadb
      restart: always
      environment:
-       MYSQL_ROOT_PASSWORD: PM-DBPassw0rd
+       MYSQL_ROOT_PASSWORD: GLPI-PM-DBPassw0rd
      networks:
-     - pm-net
+      - glpi-pm-net
+     volumes:
+      - mariadb-pm-glpi-data:/var/lib/mysql:Z
 
    processmaker:
      depends_on:
-     - mysql
-     image: processmaker/processmaker
+      - mariadb
+     image: wolvverine/processmaker_server_glpi
      ports:
-       - "80:80"
+      - "9080:9080"
      restart: always
      environment:
-       URL: "127.0.0.1"
+       PM_HOST_FULL_NAME: pmhost.domain.com
      networks:
-      - pm-net
+      - glpi-pm-net
+     volumes:
+      - processmaker-glpi-backup:/opt/processmaker-server/Backup:Z
+
+   glpi:
+     depends_on:
+     - mariadb
+     image: wolvverine/docker-glpi
+     ports:
+      - "80:80"
+     restart: always
+     environment:
+       PHPFPM_PM_MAX_CHILDREN: 20
+       PHPFPM_PM_PROCESS_IDLE_TIMEOUT: 60s
+       GLPI_CHMOD_PATHS_FILES: "yes"
+       GLPI_REMOVE_INSTALLER: "no"
+       GLPI_ENABLE_CRONJOB: "yes"
+       TZ: "Europe/Warsaw"
+       GLPI_INSTALL_PLUGINS: "\
+            fusioninventory|https://github.com/fusioninventory/fusioninventory-for-glpi/releases/download/glpi9.5%2B3.0/fusioninventory-9.5+3.0.tar.bz2,\
+            processmaker|https://github.com/tomolimo/processmaker/releases/download/4.0.11/processmaker-4.0.11.zip,\
+            "
+     networks:
+      - glpi-pm-net
+     volumes:
+      - glpi-files:/var/www/files:Z
+      - glpi-config:/var/www/config:Z
 
 networks:
-  pm-net:
+  glpi-pm-net:
     driver: bridge
     ipam:
       driver: default
