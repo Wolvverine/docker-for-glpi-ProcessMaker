@@ -25,6 +25,7 @@ RUN set -ex ;\
 	unzip \
 	freetds \
 	ca-certificates \
+	icu \
 	libgd \
 	libldap \
 	libmcrypt \
